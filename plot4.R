@@ -1,0 +1,22 @@
+datasource <- read.csv("household_power_consumption.txt", sep=";")
+datasource$Date<-(as.Date(datasource$Date,format="%d/%m/%Y"))
+datasource<- datasource[datasource$Date %in% as.Date(c('2007-02-01', '2007-02-02')),]
+datasource$T2<-paste(datasource$Date,datasource$Time)
+datasource$Global_active_power<-as.numeric(as.character(datasource$Global_active_power))
+datasource$Sub_metering_1<-as.numeric(as.character(datasource$Sub_metering_1))
+datasource$Sub_metering_2<-as.numeric(as.character(datasource$Sub_metering_2))
+datasource$Sub_metering_3<-as.numeric(as.character(datasource$Sub_metering_3))
+datasource$Voltage<-as.numeric(as.character(datasource$Voltage))
+datasource$Global_reactive_power<-as.numeric(as.character(datasource$Global_reactive_power))
+datasource$T2<-as.POSIXlt(datasource$T2)
+
+png(file = "plot4.png", width=480, height=480)
+par(mfcol=c(2,2))
+plot(datasource$T2,datasource$Global_active_power,type="l",ylab="Global Active Power",xlab="")
+matplot(datasource[,7:9], type = "lll",lty=1,col = c(1,2,4),ylab="Energy sub metering",xaxt="n")
+axis(1, at=c(0, 1440,  2880),labels=c("Thu", "Fri", "Sat")) 
+legend("topright",cex=0.5, lty = 1, col = c(1,2,4), legend = c("Sub_metering_1", "Sub_metering_2", "Sub_metering_3"))
+plot(datasource$T2,datasource$Voltage,type="l",ylab="Voltage",xlab="datetime")
+plot(datasource$T2,datasource$Global_reactive_power,type="l",ylab="Global_reactive_power",xlab="datetime")
+dev.off() 
+
